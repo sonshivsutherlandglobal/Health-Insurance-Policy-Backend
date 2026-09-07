@@ -1,0 +1,2048 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "type": "tab",
+        "createdDate": "2026-08-05T04:37:56.437Z",
+        "label": "HealthInsurancebackend",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "relativeParentPath": "HealthInsurancePolicySubmissionUnderwriting"
+    },
+    {
+        "id": "sd_dXP4NlvlLDTjJzHC",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "createApplication",
+        "path": "/createApplication",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 65,
+        "y": 80,
+        "wires": [
+            [
+                "sd_2YSB185LaJroT1j9"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "functionName": "sd_dXP4NlvlLDTjJzHC"
+    },
+    {
+        "id": "sd_ZuiFiHLNdJZU8x7p",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "createapplicationres",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "createapplicationres",
+        "category": "HTTP",
+        "x": 565,
+        "y": 80,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_2YSB185LaJroT1j9",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareApplicationData",
+        "script": "const payload = bh.input.body;\n\n// ========================================\n// Mandatory Validations\n// ========================================\n\n// Applicant Name\nif (!payload.applicant_name || payload.applicant_name.trim() === '') {\n    throw new Error(\"Applicant Name is required\");\n}\n\n// DOB\nif (!payload.dob) {\n    throw new Error(\"Date of Birth is required\");\n}\n\n// Age\nif (!payload.age) {\n    throw new Error(\"Age is required\");\n}\n\nif (payload.age < 18 || payload.age > 65) {\n    throw new Error(\"Age must be between 18 and 65\");\n}\n\n// Mobile\nconst mobileRegex = /^[0-9]{10}$/;\n\nif (!payload.mobile || !mobileRegex.test(String(payload.mobile))) {\n    throw new Error(\"Mobile number must be exactly 10 digits\");\n}\n\n// Email\nif (\n    !payload.email ||\n    payload.email.indexOf('@') === -1 ||\n    payload.email.indexOf('.') === -1\n) {\n    throw new Error(\"Invalid email format\");\n}\n\n// Plan Type\nif (!payload.plan_type) {\n    throw new Error(\"Plan Type is required\");\n}\n\n// Policy Term\nif (!payload.policy_term) {\n    throw new Error(\"Policy Term is required\");\n}\n\n// Sum Insured\nif (!payload.sum_insured || payload.sum_insured <= 0) {\n    throw new Error(\"Sum Insured must be greater than 0\");\n}\n\n// ========================================\n// Prepare Payload For Data Service\n// ========================================\n\nbh.local.applicationData = {\n    policy_applications: {\n        applicant_name: payload.applicant_name,\n        dob: payload.dob,\n        age: payload.age,\n        gender: payload.gender || null,\n        mobile: payload.mobile,\n        email: payload.email,\n        address: payload.address || null,\n        plan_type: payload.plan_type,\n        sum_insured: payload.sum_insured,\n        policy_term: payload.policy_term,\n        medical_conditions: payload.medical_conditions || {},\n        status: \"DRAFT\",\n        assigned_role: \"CUSTOMER\"\n    }\n};",
+        "functionName": "prepareApplicationData",
+        "category": "Function",
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "sd_JtJQhEYLtCtoTjtJ"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_opRFOl4aZ0qvRJo6",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "buildResponse",
+        "script": "bh.local.response = {\n    success: true,\n    applicationId:\n        bh.local.applicationDataResponse.payload.application_id,\n    status:\n        bh.local.applicationDataResponse.payload.status,\n    assignedRole:\n        bh.local.applicationDataResponse.payload.assigned_role,\n    message: \"Application saved successfully\"\n};",
+        "functionName": "buildResponse",
+        "category": "Function",
+        "x": 445,
+        "y": 80,
+        "wires": [
+            [
+                "sd_ZuiFiHLNdJZU8x7p"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_8PPcrpb3cyVmR3bi",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "updateApplication",
+        "path": "/updateApplication",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "put",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 65,
+        "y": 240,
+        "wires": [
+            [
+                "sd_2V6Bx6JeaIUzyk5c"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "functionName": "sd_8PPcrpb3cyVmR3bi"
+    },
+    {
+        "id": "sd_EyMtp6UMQ4tJewsF",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "updateApplicationres",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "updateApplicationres",
+        "category": "HTTP",
+        "x": 585,
+        "y": 240,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_2V6Bx6JeaIUzyk5c",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareUpdateData",
+        "script": "const payload = bh.input.body;\n\nif (!payload.application_id) {\n    throw new Error(\"Application Id is required\");\n}\n\nbh.local.updatePayload = {\n    policy_applications: {\n        application_id: payload.application_id,\n        applicant_name: payload.applicant_name,\n        dob: payload.dob,\n        age: payload.age,\n        gender: payload.gender || null,\n        mobile: payload.mobile,\n        email: payload.email,\n        address: payload.address || null,\n        plan_type: payload.plan_type,\n        sum_insured: payload.sum_insured,\n        policy_term: payload.policy_term,\n        medical_conditions: payload.medical_conditions || {},\n        updated_at: new Date()\n    }\n};\n\nconsole.log(\n    \"Update Payload:\",\n    JSON.stringify(bh.local.updatePayload, null, 2)\n);",
+        "functionName": "prepareUpdateData",
+        "category": "Function",
+        "x": 200,
+        "y": 240,
+        "wires": [
+            [
+                "sd_zSr9xA37huvwB8Bs"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_VL2LRYShBVNogekH",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "buildUpdateResponse",
+        "script": "console.log(\n    \"UPDATE RESPONSE =>\",\n    JSON.stringify(\n        bh.local.updateApplicationResponse,\n        null,\n        2\n    )\n);\n\nif (\n    !bh.local.updateApplicationResponse ||\n    !bh.local.updateApplicationResponse.payload ||\n    !bh.local.updateApplicationResponse.payload.application_id\n) {\n    throw new Error(\n        \"Application not found or cannot be updated\"\n    );\n}\n\nbh.local.response = {\n    success: true,\n    applicationId:\n        bh.local.updateApplicationResponse.payload.application_id,\n    message: \"Application updated successfully\"\n};",
+        "functionName": "buildUpdateResponse",
+        "category": "Function",
+        "x": 465,
+        "y": 240,
+        "wires": [
+            [
+                "sd_EyMtp6UMQ4tJewsF"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_NzOCNeYaH2bAJHAW",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "submitApplication",
+        "path": "/submitApplication",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 65,
+        "y": 380,
+        "wires": [
+            [
+                "sd_mfsO5GEzxKFRsapv"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "functionName": "sd_NzOCNeYaH2bAJHAW"
+    },
+    {
+        "id": "sd_qiMx03S8ASLsUP0H",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "submitApplicationRes",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "submitApplicationRes",
+        "category": "HTTP",
+        "x": 845,
+        "y": 380,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_mfsO5GEzxKFRsapv",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareSubmitData",
+        "script": "const payload = bh.input.body;\n\nif (!payload.application_id) {\n    throw new Error(\"Application Id is required\");\n}\n\nbh.local.submitPayload = {\n    policy_applications: {\n        application_id: payload.application_id,\n        status: \"SUBMITTED\",\n        assigned_role: \"CASE_MANAGER\",\n        updated_at: new Date()\n    }\n};\n\nconsole.log(\n    \"Submit Payload:\",\n    JSON.stringify(bh.local.submitPayload, null, 2)\n);",
+        "functionName": "prepareSubmitData",
+        "category": "Function",
+        "x": 200,
+        "y": 380,
+        "wires": [
+            [
+                "sd_YES6eHzzS1j0xMs7"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_vy6arNyI1u7hWYJn",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareAuditQuery",
+        "script": "console.log(\n    \"SUBMIT RESPONSE =>\",\n    JSON.stringify(\n        bh.local.submitApplicationResponse,\n        null,\n        2\n    )\n);\n\nif (\n    !bh.local.submitApplicationResponse ||\n    !bh.local.submitApplicationResponse.payload ||\n    !bh.local.submitApplicationResponse.payload.application_id\n) {\n    throw new Error(\n        \"Application not found or already submitted\"\n    );\n}\n\nconst applicationId =\n    bh.local.submitApplicationResponse.payload.application_id;\n\nbh.local.auditPayload = {\n    policy_workflow_audit: {\n        application_id: applicationId,\n        previous_status: \"DRAFT\",\n        current_status: \"SUBMITTED\",\n        action_role: \"CUSTOMER\",\n        remarks: \"Application Submitted\"\n    }\n};\n\nconsole.log(\n    \"Audit Payload:\",\n    JSON.stringify(\n        bh.local.auditPayload,\n        null,\n        2\n    )\n);\n",
+        "functionName": "prepareAuditQuery",
+        "category": "Function",
+        "x": 445,
+        "y": 380,
+        "wires": [
+            [
+                "sd_ly0AOGIljFPmcURZ"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_p0L5np3dsg2KPLbl",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "submitApplicationResponse",
+        "script": "bh.local.response = {\n    success: true,\n    applicationId:\n        bh.local.submitApplicationResponse.payload.application_id,\n    status: \"SUBMITTED\",\n    assignedRole: \"CASE_MANAGER\",\n    message: \"Application submitted successfully\"\n};",
+        "functionName": "submitApplicationResponse",
+        "category": "Function",
+        "x": 705,
+        "y": 380,
+        "wires": [
+            [
+                "sd_qiMx03S8ASLsUP0H"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_NsGMWMZw0L9T7I5K",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "getApplicationDetails",
+        "path": "/getApplicationDetails/:applicationId",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "get",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 65,
+        "y": 520,
+        "wires": [
+            [
+                "sd_tKZlK0W1JObXvFMx"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "functionName": "sd_NsGMWMZw0L9T7I5K"
+    },
+    {
+        "id": "sd_FYyasumf6jKsjj4Y",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "getApplicationDetailsRes",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "getApplicationDetailsRes",
+        "category": "HTTP",
+        "x": 585,
+        "y": 520,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_tKZlK0W1JObXvFMx",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareSelectQuery",
+        "script": "const applicationId =\n    bh.input.params.applicationId;\n\nif (!applicationId) {\n    throw new Error(\"Application Id is required\");\n}\n\nbh.local.findPayload = {\n    filter: {\n        application_id: applicationId\n    }\n};",
+        "functionName": "prepareSelectQuery",
+        "category": "Function",
+        "x": 200,
+        "y": 520,
+        "wires": [
+            [
+                "sd_ZAzMVOU7R2JnylaW"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_uG5Mq3kkZNZce85f",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "buildapplicationResponse",
+        "script": "if (\n    !bh.local.applicationResponse ||\n    !bh.local.applicationResponse.payload\n) {\n    throw new Error(\"Application not found\");\n}\n\nbh.local.response = {\n    success: true,\n    data: bh.local.applicationResponse.payload\n};",
+        "functionName": "buildapplicationResponse",
+        "category": "Function",
+        "x": 465,
+        "y": 520,
+        "wires": [
+            [
+                "sd_FYyasumf6jKsjj4Y"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_YUylDUd5JM4wOVAy",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "generatePolicy",
+        "path": "/generatePolicy",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 65,
+        "y": 700,
+        "wires": [
+            [
+                "sd_94eOLkj0PgFoVeqw"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend",
+        "functionName": "sd_YUylDUd5JM4wOVAy"
+    },
+    {
+        "id": "sd_auT3bSQJWsVJirbf",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "genratepolicyhttpoutres",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "genratepolicyhttpoutres",
+        "category": "HTTP",
+        "x": 1385,
+        "y": 700,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_94eOLkj0PgFoVeqw",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "preparePolicyGeneration",
+        "script": "const payload = bh.input.body;\n\nif (!payload.application_id) {\n    throw new Error(\"Application Id is required\");\n}\n\nbh.local.findPayload = {\n    filter: {\n        application_id: payload.application_id\n    }\n};",
+        "functionName": "preparePolicyGeneration",
+        "category": "Function",
+        "x": 200,
+        "y": 700,
+        "wires": [
+            [
+                "sd_4vVM6uN3BtxT8xmc"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_uCOe5jsikPnn4vZ7",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareApplicationUpdate",
+        "script": "const app =\n    bh.local.applicationResponse.payload;\n\nbh.local.applicationUpdatePayload = {\n    policy_applications: {\n        application_id: app.application_id,\n        applicant_name: app.applicant_name,\n        dob: app.dob,\n        age: Number(app.age),\n        gender: app.gender,\n        mobile: app.mobile,\n        email: app.email,\n        address: app.address,\n        plan_type: app.plan_type,\n        sum_insured: Number(app.sum_insured),\n        policy_term: Number(app.policy_term),\n        medical_conditions: app.medical_conditions,\n        status: \"POLICY_ISSUED\",\n        assigned_role: \"CLOSED\",\n        risk_score: Number(app.risk_score || 0),\n        base_premium: Number(app.base_premium),\n        discount_percentage: Number(app.discount_percentage),\n        loading_percentage: Number(app.loading_percentage),\n        final_premium: Number(app.final_premium),\n        case_manager_remarks: app.case_manager_remarks,\n        underwriter_remarks: app.underwriter_remarks,\n        updated_at: new Date()\n    }\n};",
+        "functionName": "prepareApplicationUpdate",
+        "category": "Function",
+        "x": 720,
+        "y": 700,
+        "wires": [
+            [
+                "sd_zayXvlgMoZJNzPhq"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_F4byEtm6yT10aaR8",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "genratePolicyResponse",
+        "script": "bh.local.response = {\n    success: true,\n    applicationId:\n        bh.local.applicationResponse.payload.application_id,\n    policyNumber:\n        bh.local.policyNumber,\n    status: \"POLICY_ISSUED\",\n    message: \"Policy generated successfully\"\n};",
+        "functionName": "genratePolicyResponse",
+        "category": "Function",
+        "x": 1265,
+        "y": 700,
+        "wires": [
+            [
+                "sd_auT3bSQJWsVJirbf"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_6BOp4CaBHrYiJ2P6",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "preparePolicyInsert",
+        "script": "if (\n    !bh.local.applicationResponse ||\n    !bh.local.applicationResponse.payload\n) {\n    throw new Error(\"Application not found\");\n}\n\nconst app =\n    bh.local.applicationResponse.payload;\n\n// Prevent duplicate generation\nif (app.status === \"POLICY_ISSUED\") {\n    throw new Error(\n        \"Policy already generated for this application\"\n    );\n}\n\n// Premium validation\nif (\n    app.final_premium === null ||\n    app.final_premium === undefined\n) {\n    throw new Error(\n        \"Final premium is not calculated\"\n    );\n}\n\n// Status validation\nif (\n    app.status !== \"SUBMITTED\" &&\n    app.status !== \"APPROVED\"\n) {\n    throw new Error(\n        \"Application is not eligible for policy generation\"\n    );\n}\n\nconst policyNumber =\n    \"POL\" + Date.now();\n\nbh.local.policyNumber = policyNumber;\n\nbh.local.policyPayload = {\n    policy_master: {\n        policy_number: policyNumber,\n        application_id: app.application_id,\n        applicant_name: app.applicant_name,\n        plan_type: app.plan_type,\n        policy_term: Number(app.policy_term),\n        sum_insured: Number(app.sum_insured),\n        final_premium: Number(app.final_premium),\n        issue_date: new Date(),\n        status: \"POLICY_ISSUED\"\n    }\n};\n\nconsole.log(\n    \"POLICY PAYLOAD =>\",\n    JSON.stringify(\n        bh.local.policyPayload,\n        null,\n        2\n    )\n);",
+        "functionName": "preparePolicyInsert",
+        "category": "Function",
+        "x": 465,
+        "y": 700,
+        "wires": [
+            [
+                "sd_7p6voqbz7pdv0Usq"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_PdgSIWJIUJeOWGuC",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareAuditInsert",
+        "script": "const app =\n    bh.local.applicationResponse.payload;\n\nbh.local.auditPayload = {\n    policy_workflow_audit: {\n        application_id: app.application_id,\n        previous_status: app.status,\n        current_status: \"POLICY_ISSUED\",\n        action_role: \"UNDERWRITER\",\n        remarks: \"Policy Generated\"\n    }\n};",
+        "functionName": "prepareAuditInsert",
+        "category": "Function",
+        "x": 1005,
+        "y": 700,
+        "wires": [
+            [
+                "sd_Pcdc7QDwnkIqWtfX"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_Hb7GIM2hZz0SJnqZ",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "selectedNodes": [
+            "sd_dXP4NlvlLDTjJzHC",
+            "sd_ZuiFiHLNdJZU8x7p",
+            "sd_2YSB185LaJroT1j9",
+            "sd_opRFOl4aZ0qvRJo6",
+            "sd_JtJQhEYLtCtoTjtJ"
+        ],
+        "selectCatchType": "selectednodes",
+        "masternodeList": "",
+        "ignoreList": "",
+        "functionName": "sd_Hb7GIM2hZz0SJnqZ",
+        "category": "General",
+        "x": 745,
+        "y": 80,
+        "wires": [
+            [
+                "sd_pSDJooX4y7gluOyq"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend"
+    },
+    {
+        "id": "sd_AAusezAaNvxktklF",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "apiResponse",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh.local",
+            "value": "statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.local.statusCode",
+            "obj": "bh.local.apiResponse",
+            "send": "bh.local.apiResponse"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_AAusezAaNvxktklF",
+        "category": "HTTP",
+        "x": 945,
+        "y": 80,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_pSDJooX4y7gluOyq",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "let message = \"Failed to create application\";\nlet statusCode = 500;\n\nif (bh.error) {\n\n    message =\n        bh.error.message ||\n        bh.error.toString() ||\n        message;\n\n    // Validation Errors\n    if (\n        message.includes(\"Applicant Name\") ||\n        message.includes(\"Date of Birth\") ||\n        message.includes(\"Age\") ||\n        message.includes(\"Mobile\") ||\n        message.includes(\"Email\") ||\n        message.includes(\"Plan Type\") ||\n        message.includes(\"Policy Term\") ||\n        message.includes(\"Sum Insured\")\n    ) {\n        statusCode = 400;\n    }\n\n    // HTTP / Integration Errors\n    else if (message.includes(\"404\")) {\n        message = \"Data service endpoint not found\";\n        statusCode = 502;\n    }\n\n    else if (\n        message.includes(\"ECONNREFUSED\") ||\n        message.includes(\"connect ECONNREFUSED\")\n    ) {\n        message = \"Data service is unavailable\";\n        statusCode = 503;\n    }\n\n    else if (\n        message.includes(\"Response code\") ||\n        message.includes(\"Bad Request\") ||\n        message.includes(\"must be object\")\n    ) {\n        message = \"Invalid request sent to data service\";\n        statusCode = 400;\n    }\n}\n\nbh.local.statusCode = statusCode;\n\nbh.local.apiResponse = {\n    success: false,\n    api: \"createApplication\",\n    message: message\n};\n\nconsole.error(\n    \"CREATE APPLICATION ERROR:\",\n    bh.error\n);",
+        "functionName": "sd_pSDJooX4y7gluOyq",
+        "category": "Function",
+        "x": 850,
+        "y": 80,
+        "wires": [
+            [
+                "sd_AAusezAaNvxktklF"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_uloPd8kpxaAxUKgW",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "selectedNodes": [
+            "sd_8PPcrpb3cyVmR3bi",
+            "sd_EyMtp6UMQ4tJewsF",
+            "sd_2V6Bx6JeaIUzyk5c",
+            "sd_VL2LRYShBVNogekH",
+            "sd_zSr9xA37huvwB8Bs"
+        ],
+        "selectCatchType": "selectednodes",
+        "masternodeList": "",
+        "ignoreList": "",
+        "functionName": "sd_uloPd8kpxaAxUKgW",
+        "category": "General",
+        "x": 725,
+        "y": 240,
+        "wires": [
+            [
+                "sd_JkMCJvEMrqlkxIYP"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend"
+    },
+    {
+        "id": "sd_d4DbuvT7f2FN1e9K",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "apiResponse",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh.local",
+            "value": "statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.local.statusCode",
+            "obj": "bh.local.apiResponse",
+            "send": "bh.local.apiResponse"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_d4DbuvT7f2FN1e9K",
+        "category": "HTTP",
+        "x": 925,
+        "y": 240,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_JkMCJvEMrqlkxIYP",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "let message = \"Failed to update application\";\nlet statusCode = 500;\n\nif (bh.error) {\n\n    message =\n        bh.error.message ||\n        bh.error.toString() ||\n        message;\n\n    // Validation Errors\n    if (\n        message.includes(\"Application Id\") ||\n        message.includes(\"Application not found\")\n    ) {\n        statusCode = 400;\n    }\n\n    // HTTP / Integration Errors\n    else if (message.includes(\"404\")) {\n        message = \"Data service endpoint not found\";\n        statusCode = 502;\n    }\n\n    else if (\n        message.includes(\"ECONNREFUSED\") ||\n        message.includes(\"connect ECONNREFUSED\")\n    ) {\n        message = \"Data service is unavailable\";\n        statusCode = 503;\n    }\n\n    else if (\n        message.includes(\"Response code\") ||\n        message.includes(\"Bad Request\") ||\n        message.includes(\"must be object\")\n    ) {\n        message = \"Invalid request sent to data service\";\n        statusCode = 400;\n    }\n}\n\nbh.local.statusCode = statusCode;\n\nbh.local.apiResponse = {\n    success: false,\n    api: \"updateApplication\",\n    message: message\n};\n\nconsole.error(\n    \"UPDATE APPLICATION ERROR:\",\n    bh.error\n);",
+        "functionName": "sd_JkMCJvEMrqlkxIYP",
+        "category": "Function",
+        "x": 830,
+        "y": 240,
+        "wires": [
+            [
+                "sd_d4DbuvT7f2FN1e9K"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_568HzBf5iOQp3fDH",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "selectedNodes": [
+            "sd_NzOCNeYaH2bAJHAW",
+            "sd_qiMx03S8ASLsUP0H",
+            "sd_mfsO5GEzxKFRsapv",
+            "sd_vy6arNyI1u7hWYJn",
+            "sd_p0L5np3dsg2KPLbl",
+            "sd_YES6eHzzS1j0xMs7",
+            "sd_ly0AOGIljFPmcURZ"
+        ],
+        "selectCatchType": "selectednodes",
+        "masternodeList": "",
+        "ignoreList": "",
+        "functionName": "sd_568HzBf5iOQp3fDH",
+        "category": "General",
+        "x": 1005,
+        "y": 380,
+        "wires": [
+            [
+                "sd_aIFBYh5cZfpiNRoy"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend"
+    },
+    {
+        "id": "sd_NQhyDhaMJ6Pn2xGg",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "apiResponse",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh.local",
+            "value": "statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.local.statusCode",
+            "obj": "bh.local.apiResponse",
+            "send": "bh.local.apiResponse"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_NQhyDhaMJ6Pn2xGg",
+        "category": "HTTP",
+        "x": 1205,
+        "y": 380,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_aIFBYh5cZfpiNRoy",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "let message = \"Failed to submit application\";\nlet statusCode = 500;\n\nif (bh.error) {\n\n    message =\n        bh.error.message ||\n        bh.error.toString() ||\n        message;\n\n    // Validation Errors\n    if (\n        message.includes(\"Application Id\") ||\n        message.includes(\"Application not found\")\n    ) {\n        statusCode = 400;\n    }\n\n    // Endpoint Not Found\n    else if (message.includes(\"404\")) {\n        message = \"Data service endpoint not found\";\n        statusCode = 502;\n    }\n\n    // Service Down\n    else if (\n        message.includes(\"ECONNREFUSED\") ||\n        message.includes(\"connect ECONNREFUSED\")\n    ) {\n        message = \"Data service is unavailable\";\n        statusCode = 503;\n    }\n\n    // Invalid Payload\n    else if (\n        message.includes(\"Response code\") ||\n        message.includes(\"Bad Request\") ||\n        message.includes(\"must be object\")\n    ) {\n        message = \"Invalid request sent to data service\";\n        statusCode = 400;\n    }\n\n    // Internal Data Service Error\n    else if (\n        message.includes(\"500\") ||\n        message.includes(\"Internal Server Error\")\n    ) {\n        message = \"Data service processing failed\";\n        statusCode = 500;\n    }\n}\n\nbh.local.statusCode = statusCode;\n\nbh.local.apiResponse = {\n    success: false,\n    api: \"submitApplication\",\n    message: message\n};\n\nconsole.error(\n    \"SUBMIT APPLICATION ERROR:\",\n    bh.error\n);",
+        "functionName": "sd_aIFBYh5cZfpiNRoy",
+        "category": "Function",
+        "x": 1110,
+        "y": 380,
+        "wires": [
+            [
+                "sd_NQhyDhaMJ6Pn2xGg"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_jfycptopjtwkgA3V",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "selectedNodes": [
+            "sd_NsGMWMZw0L9T7I5K",
+            "sd_FYyasumf6jKsjj4Y",
+            "sd_tKZlK0W1JObXvFMx",
+            "sd_uG5Mq3kkZNZce85f",
+            "sd_ZAzMVOU7R2JnylaW"
+        ],
+        "selectCatchType": "selectednodes",
+        "masternodeList": "",
+        "ignoreList": "",
+        "functionName": "sd_jfycptopjtwkgA3V",
+        "category": "General",
+        "x": 737.7777709960938,
+        "y": 524.5949096679688,
+        "wires": [
+            [
+                "sd_YnJC2DWOemxWwLpS"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend"
+    },
+    {
+        "id": "sd_4pt1brHEbT04QS7R",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "apiResponse",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh.local",
+            "value": "statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.local.statusCode",
+            "obj": "bh.local.apiResponse",
+            "send": "bh.local.apiResponse"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_4pt1brHEbT04QS7R",
+        "category": "HTTP",
+        "x": 937.7777709960938,
+        "y": 524.5949096679688,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_YnJC2DWOemxWwLpS",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "let message =\n    \"Failed to fetch application details\";\nlet statusCode = 500;\n\nif (bh.error) {\n\n    message =\n        bh.error.message ||\n        bh.error.toString() ||\n        message;\n\n    if (\n        message.includes(\"Application Id\") ||\n        message.includes(\"Application not found\")\n    ) {\n        statusCode = 404;\n    }\n\n    else if (message.includes(\"404\")) {\n        message = \"Data service endpoint not found\";\n        statusCode = 502;\n    }\n\n    else if (\n        message.includes(\"ECONNREFUSED\") ||\n        message.includes(\"connect ECONNREFUSED\")\n    ) {\n        message = \"Data service is unavailable\";\n        statusCode = 503;\n    }\n\n    else if (\n        message.includes(\"Response code\") ||\n        message.includes(\"Bad Request\") ||\n        message.includes(\"must be object\")\n    ) {\n        message = \"Invalid request sent to data service\";\n        statusCode = 400;\n    }\n}\n\nbh.local.statusCode = statusCode;\n\nbh.local.apiResponse = {\n    success: false,\n    api: \"getApplicationDetails\",\n    message: message\n};\n\nconsole.error(\n    \"GET APPLICATION DETAILS ERROR:\",\n    bh.error\n);",
+        "functionName": "sd_YnJC2DWOemxWwLpS",
+        "category": "Function",
+        "x": 842.7777709960938,
+        "y": 524.5949096679688,
+        "wires": [
+            [
+                "sd_4pt1brHEbT04QS7R"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_VNWgu7SmNEIxmO7v",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "",
+        "selectedNodes": [
+            "sd_YUylDUd5JM4wOVAy",
+            "sd_auT3bSQJWsVJirbf",
+            "sd_94eOLkj0PgFoVeqw",
+            "sd_uCOe5jsikPnn4vZ7",
+            "sd_F4byEtm6yT10aaR8",
+            "sd_6BOp4CaBHrYiJ2P6",
+            "sd_PdgSIWJIUJeOWGuC",
+            "sd_4vVM6uN3BtxT8xmc",
+            "sd_7p6voqbz7pdv0Usq",
+            "sd_zayXvlgMoZJNzPhq",
+            "sd_Pcdc7QDwnkIqWtfX"
+        ],
+        "selectCatchType": "selectednodes",
+        "masternodeList": "",
+        "ignoreList": "",
+        "functionName": "sd_VNWgu7SmNEIxmO7v",
+        "category": "General",
+        "x": 1545,
+        "y": 700,
+        "wires": [
+            [
+                "sd_YMrSyw1mzYuAFHCp"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "HealthInsurancebackend"
+    },
+    {
+        "id": "sd_V7jRz7kCow3j8C4v",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "apiResponse",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh.local",
+            "value": "statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.local.statusCode",
+            "obj": "bh.local.apiResponse",
+            "send": "bh.local.apiResponse"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_V7jRz7kCow3j8C4v",
+        "category": "HTTP",
+        "x": 1745,
+        "y": 700,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_YMrSyw1mzYuAFHCp",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "let message = \"Failed to generate policy\";\nlet statusCode = 500;\n\nif (bh.error) {\n\n    message =\n        bh.error.message ||\n        bh.error.toString() ||\n        message;\n\n    if (\n        message.includes(\"Application Id\") ||\n        message.includes(\"Application not found\") ||\n        message.includes(\"Policy already generated\") ||\n        message.includes(\"Final premium is not calculated\") ||\n        message.includes(\"eligible for policy generation\")\n    ) {\n        statusCode = 400;\n    }\n\n    else if (message.includes(\"404\")) {\n        message = \"Data service endpoint not found\";\n        statusCode = 502;\n    }\n\n    else if (\n        message.includes(\"ECONNREFUSED\") ||\n        message.includes(\"connect ECONNREFUSED\")\n    ) {\n        message = \"Data service is unavailable\";\n        statusCode = 503;\n    }\n\n    else if (\n        message.includes(\"Response code\") ||\n        message.includes(\"Bad Request\") ||\n        message.includes(\"must be object\")\n    ) {\n        message = \"Invalid request sent to data service\";\n        statusCode = 400;\n    }\n}\n\nbh.local.statusCode = statusCode;\n\nbh.local.apiResponse = {\n    success: false,\n    api: \"generatePolicy\",\n    message: message\n};\n\nconsole.error(\n    \"GENERATE POLICY ERROR:\",\n    bh.error\n);",
+        "functionName": "sd_YMrSyw1mzYuAFHCp",
+        "category": "Function",
+        "x": 1650,
+        "y": 700,
+        "wires": [
+            [
+                "sd_V7jRz7kCow3j8C4v"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_JtJQhEYLtCtoTjtJ",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "createapplicationcall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/create\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/create"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.applicationData",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationData"
+        },
+        "resultMapping": "bh.local.applicationDataResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationDataResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "createapplicationcall",
+        "category": "HTTP",
+        "x": 325,
+        "y": 80,
+        "wires": [
+            [
+                "sd_opRFOl4aZ0qvRJo6"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_zSr9xA37huvwB8Bs",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "updateappliactionCall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.updatePayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "updatePayload"
+        },
+        "resultMapping": "bh.local.updateApplicationResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "updateApplicationResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "updateappliactionCall",
+        "category": "HTTP",
+        "x": 320,
+        "y": 240,
+        "wires": [
+            [
+                "sd_VL2LRYShBVNogekH"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_YES6eHzzS1j0xMs7",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "submitappliactionCall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.submitPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "submitPayload"
+        },
+        "resultMapping": "bh.local.submitApplicationResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "submitApplicationResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "submitappliactionCall",
+        "category": "HTTP",
+        "x": 325,
+        "y": 380,
+        "wires": [
+            [
+                "sd_vy6arNyI1u7hWYJn"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_ly0AOGIljFPmcURZ",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "submitappliactionCallAudit",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.auditPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "auditPayload"
+        },
+        "resultMapping": "bh.local.auditResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "auditResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "submitappliactionCallAudit",
+        "category": "HTTP",
+        "x": 565,
+        "y": 380,
+        "wires": [
+            [
+                "sd_p0L5np3dsg2KPLbl"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_ZAzMVOU7R2JnylaW",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "getappliactiondetailsCall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.findPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "findPayload"
+        },
+        "resultMapping": "bh.local.applicationResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "getappliactiondetailsCall",
+        "category": "HTTP",
+        "x": 325,
+        "y": 520,
+        "wires": [
+            [
+                "sd_uG5Mq3kkZNZce85f"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_4vVM6uN3BtxT8xmc",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "genratepolicyfindapplicationcall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.findPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "findPayload"
+        },
+        "resultMapping": "bh.local.applicationResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "genratepolicyfindapplicationcall",
+        "category": "HTTP",
+        "x": 325,
+        "y": 700,
+        "wires": [
+            [
+                "sd_6BOp4CaBHrYiJ2P6"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_7p6voqbz7pdv0Usq",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "genratepolicycreatecall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_master/create\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_master/create"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.policyPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "policyPayload"
+        },
+        "resultMapping": "bh.local.policyResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "policyResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "genratepolicycreatecall",
+        "category": "HTTP",
+        "x": 585,
+        "y": 700,
+        "wires": [
+            [
+                "sd_uCOe5jsikPnn4vZ7"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_zayXvlgMoZJNzPhq",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "genratepolicyupdateapplicationcall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.applicationUpdatePayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationUpdatePayload"
+        },
+        "resultMapping": "bh.local.applicationUpdateResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "applicationUpdateResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "genratepolicyupdateapplicationcall",
+        "category": "HTTP",
+        "x": 865,
+        "y": 700,
+        "wires": [
+            [
+                "sd_PdgSIWJIUJeOWGuC"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    },
+    {
+        "id": "sd_Pcdc7QDwnkIqWtfX",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_anysKE6m1PmqnUXm",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "genratepolicyauditCall",
+        "method": "post",
+        "methodMappingObj": {},
+        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
+        "urlMappingObj": {
+            "mapVarType": "str",
+            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
+        },
+        "ret": "json",
+        "retMappingObj": {},
+        "reqBody": "bh.local.auditPayload",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "auditPayload"
+        },
+        "resultMapping": "bh.local.auditResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "auditResponse"
+        },
+        "headers": {},
+        "headersObj": [],
+        "headerMappingObj": {},
+        "params": {},
+        "paramsObj": [],
+        "paramMappingObj": {},
+        "useAuthTypeMappingObj": {},
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "genratepolicyauditCall",
+        "category": "HTTP",
+        "x": 1125,
+        "y": 700,
+        "wires": [
+            [
+                "sd_F4byEtm6yT10aaR8"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "HealthInsurancebackend",
+        "generated": true
+    }
+]

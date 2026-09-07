@@ -1,0 +1,14 @@
+{
+    "displayName": "Health-poc-BackendService",
+    "appName": "health-poc-backendservice",
+    "description": "Health Insurance Policy Submission & Underwriting-poc-BackendService",
+    "lastModified": "2026-08-05T04:37:13.456Z",
+    "imgSourcePath": "",
+    "version": "1.0.0",
+    "appType": "apiOnly",
+    "templateName": "blank",
+    "createDate": "2026-08-05T04:24:53.902Z",
+    "analyticsId": "ab0d14a3-82fc-d6d5-c9c9-ec00363c16db",
+    "createdStudioVersion": "9.3.0",
+    "isCorrupt": false
+}

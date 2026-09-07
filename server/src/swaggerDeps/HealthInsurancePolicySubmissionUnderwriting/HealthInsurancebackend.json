@@ -1,0 +1,67 @@
+{
+    "/createApplication": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "HealthInsurancebackend"
+            ]
+        }
+    },
+    "/updateApplication": {
+        "put": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "HealthInsurancebackend"
+            ]
+        }
+    },
+    "/submitApplication": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "HealthInsurancebackend"
+            ]
+        }
+    },
+    "/getApplicationDetails/:applicationId": {
+        "get": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "HealthInsurancebackend"
+            ]
+        }
+    },
+    "/generatePolicy": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "HealthInsurancebackend"
+            ]
+        }
+    }
+}
