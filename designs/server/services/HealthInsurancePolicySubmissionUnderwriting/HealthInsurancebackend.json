@@ -1406,10 +1406,10 @@
         "name": "createapplicationcall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/create\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/create\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/create"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/create"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1478,10 +1478,10 @@
         "name": "updateappliactionCall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1550,10 +1550,10 @@
         "name": "submitappliactionCall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1622,10 +1622,10 @@
         "name": "submitappliactionCallAudit",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1694,10 +1694,10 @@
         "name": "getappliactiondetailsCall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1766,10 +1766,10 @@
         "name": "genratepolicyfindapplicationcall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1838,10 +1838,10 @@
         "name": "genratepolicycreatecall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_master/create\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_master/create\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_master/create"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_master/create"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1910,10 +1910,10 @@
         "name": "genratepolicyupdateapplicationcall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id"
         },
         "ret": "json",
         "retMappingObj": {},
@@ -1982,10 +1982,10 @@
         "name": "genratepolicyauditCall",
         "method": "post",
         "methodMappingObj": {},
-        "urlMapping": "\"https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
+        "urlMapping": "\"https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create\"",
         "urlMappingObj": {
             "mapVarType": "str",
-            "mapVarValue": "https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
+            "mapVarValue": "https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create"
         },
         "ret": "json",
         "retMappingObj": {},

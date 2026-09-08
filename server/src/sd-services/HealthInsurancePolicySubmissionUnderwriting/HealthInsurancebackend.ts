@@ -349,7 +349,7 @@ export class HealthInsurancebackend {
   async createapplicationcall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/create',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/create',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -489,7 +489,7 @@ export class HealthInsurancebackend {
   async updateappliactionCall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -632,7 +632,7 @@ export class HealthInsurancebackend {
   async submitappliactionCall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -737,7 +737,7 @@ export class HealthInsurancebackend {
   async submitappliactionCallAudit(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -861,7 +861,7 @@ export class HealthInsurancebackend {
   async getappliactiondetailsCall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -988,7 +988,7 @@ export class HealthInsurancebackend {
   async genratepolicyfindapplicationcall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/find-by-id',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -1064,10 +1064,7 @@ export class HealthInsurancebackend {
       }
 
       // Status validation
-      if (
-        app.status === 'DRAFT' ||
-        app.status === 'NEW'
-      ) {
+      if (app.status !== 'SUBMITTED' && app.status !== 'APPROVED') {
         throw new Error('Application is not eligible for policy generation');
       }
 
@@ -1111,7 +1108,7 @@ export class HealthInsurancebackend {
   async genratepolicycreatecall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_master/create',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_master/create',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -1213,7 +1210,7 @@ export class HealthInsurancebackend {
   async genratepolicyupdateapplicationcall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_applications/update-by-id',
         timeout: 30000,
         method: 'post',
         headers: {},
@@ -1298,7 +1295,7 @@ export class HealthInsurancebackend {
   async genratepolicyauditCall(bh, parentSpanInst) {
     try {
       let requestOptions: any = {
-        url: 'https://dbservice.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create',
+        url: 'https://db-service.neutrinos-apps.com/api/dm/db/policy_workflow_audit/create',
         timeout: 30000,
         method: 'post',
         headers: {},
